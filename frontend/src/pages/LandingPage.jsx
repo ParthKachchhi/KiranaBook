@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Box, Grid, Typography, Button, Stack, Link, Container, IconButton } from "@mui/material";
 import { motion, useMotionValue, useTransform, useInView, AnimatePresence } from "framer-motion";
-import gsap from "gsap";
+// import gsap from "gsap";
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+// import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useNavigate } from "react-router-dom";
-
+import { gsap, ScrollTrigger } from "gsap/all";
 
 gsap.registerPlugin(ScrollTrigger);
 
