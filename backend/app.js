@@ -30,7 +30,7 @@ app.set('view engine', 'jade');
 app.use(cors({
   origin: [
     "http://localhost:3000",
-    "https://kiranabook.onrender.com"
+    "https://kirana-book.vercel.app/"
   ],
   credentials: true,
 }));
