@@ -2,7 +2,7 @@ import axios from "axios";
 import { getAuth } from "../utils/authStorage";
 
 const API = axios.create({
-    baseURL: "http://localhost:5000/api",
+    baseURL: "https://kiranabook.onrender.com/api",
 });
 
 API.interceptors.request.use((req) => {
