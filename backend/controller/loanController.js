@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const Loan = require("../models/Loan");
 const Customer = require("../models/Customer");
-const calculateInterest = require("../utils/calcInterest");
 const { calculateInterest } = require("../utils/calculateInterest");
 
 async function applyInterest(loan) {
