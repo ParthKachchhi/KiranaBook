@@ -58,7 +58,7 @@ function App() {
   // }, []);
 
   useEffect(() => {
-    syncProfile(); // 🔥 THIS IS THE MAGIC
+    syncProfile(); 
   }, []);
 
   return (
