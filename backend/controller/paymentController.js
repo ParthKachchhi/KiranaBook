@@ -1,28 +1,28 @@
 const Loan = require("../models/Loan");
 const Payment = require("../models/Payment");
 const Customer = require("../models/Customer");
-const calculateInterest = require("../utils/calcInterest");
+// const calculateInterest = require("../utils/calcInterest");
 
-const recalcCustomerBalance = async (customerId, ownerId) => {
-    const loans = await Loan.find({
-        customerId,
-        ownerId,
-        status: { $ne: "closed" },
-    });
+// const recalcCustomerBalance = async (customerId, ownerId) => {
+//     const loans = await Loan.find({
+//         customerId,
+//         ownerId,
+//         status: { $ne: "closed" },
+//     });
 
-    const totalOutstanding = loans.reduce(
-        (sum, loan) => sum + loan.outstanding,
-        0
-    );
+//     const totalOutstanding = loans.reduce(
+//         (sum, loan) => sum + loan.outstanding,
+//         0
+//     );
 
-    await Customer.findByIdAndUpdate(customerId, {
-        balance: totalOutstanding,
-        type:
-            totalOutstanding === 0
-                ? "settled"
-                : "receivable",
-    });
-};
+//     await Customer.findByIdAndUpdate(customerId, {
+//         balance: totalOutstanding,
+//         type:
+//             totalOutstanding === 0
+//                 ? "settled"
+//                 : "receivable",
+//     });
+// };
 
 exports.collectPayment = async (req, res) => {
     try {

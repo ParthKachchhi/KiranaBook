@@ -1,26 +1,27 @@
 const mongoose = require("mongoose");
 const Loan = require("../models/Loan");
 const Customer = require("../models/Customer");
-const { calculateInterest } = require("../utils/calculateInterest");
+const calcinterest = require("../utils/calcInterest");
+// const { calculateInterest } = require("../utils/calculateInterest");
 
-async function applyInterest(loan) {
-  const today = new Date();
+// async function applyInterest(loan) {
+//   const today = new Date();
 
-  const { interest } = calculateInterest({
-    principal: loan.outstanding,
-    interestRate: loan.interestRate,
-    startDate: loan.lastInterestCalcDate,
-    endDate: today,
-    interestType: loan.interestType,
-  });
+//   const { interest } = calculateInterest({
+//     principal: loan.outstanding,
+//     interestRate: loan.interestRate,
+//     startDate: loan.lastInterestCalcDate,
+//     endDate: today,
+//     interestType: loan.interestType,
+//   });
 
-  if (interest > 0) {
-    loan.outstanding += interest;
-    loan.totalInterest += interest;
-    loan.lastInterestCalcDate = today;
-    await loan.save();
-  }
-}
+//   if (interest > 0) {
+//     loan.outstanding += interest;
+//     loan.totalInterest += interest;
+//     loan.lastInterestCalcDate = today;
+//     await loan.save();
+//   }
+// }
 
 /* =========================
    CREATE LOAN
