@@ -15,11 +15,12 @@ const authMiddleware = require("./middleware/authMiddleware");
 const profileRoutes = require("./routes/profile");
 const loanRoutes = require("./routes/loan");
 const customerRoutes = require("./routes/customer");
+const paymentRoutes = require("./routes/payment");
 
 // MongoDB connection
 const mongoose = require("mongoose");
-// mongoose.connect("mongodb://127.0.0.1:27017/khataBookDB")
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect("mongodb://127.0.0.1:27017/khataBookDB")
+// mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.log(err));
 
@@ -40,16 +41,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use('/', indexRouter);
-// app.use('/users', usersRouter);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/loans", loanRoutes);
 app.use("/api/customers", customerRoutes);
-// app.use("/api/customers", require("./routes/customer"));
-// app.use("/api/transactions", require("./routes/transaction"));
-// app.use("/api/stock", require("./routes/stock"));
+app.use("/api/payments", paymentRoutes);
 
 app.get('/', (req, res) => {
   res.json({

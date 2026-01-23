@@ -7,7 +7,7 @@ const cloudinary = require("../config/cloudinary");
 // ==============================
 exports.getProfile = async (req, res) => {
     try {
-        const user = await User.findById(req.userId).select("-password");
+        const user = await User.findById(req.ownerId).select("-password");
 
         if (!user) return res.status(404).json({ message: "User not found" });
 
@@ -25,7 +25,7 @@ exports.updateProfile = async (req, res) => {
         const { businessName, ownerName, email, businessType } = req.body;
 
         const user = await User.findByIdAndUpdate(
-            req.userId,
+            req.ownerId,
             { businessName, ownerName, email, businessType },
             { new: true }
         ).select("-password");
@@ -43,7 +43,7 @@ exports.changePassword = async (req, res) => {
     try {
         const { currentPassword, newPassword } = req.body;
 
-        const user = await User.findById(req.userId);
+        const user = await User.findById(req.ownerId);
 
         const match = await bcrypt.compare(currentPassword, user.password);
         if (!match) {
@@ -79,7 +79,7 @@ exports.uploadAvatar = async (req, res) => {
         );
 
         const user = await User.findByIdAndUpdate(
-            req.userId,
+            req.ownerId,
             { avatar: uploadResult.secure_url },
             { new: true }
         ).select("-password -resetOTP -resetOTPExpiry");
@@ -101,7 +101,7 @@ exports.uploadAvatar = async (req, res) => {
 
 exports.getProfile = async (req, res) => {
     try {
-        const user = await User.findById(req.userId).select(
+        const user = await User.findById(req.ownerId).select(
             "-password -resetOTP -resetOTPExpiry"
         );
 

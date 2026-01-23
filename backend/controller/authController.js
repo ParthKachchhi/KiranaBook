@@ -115,9 +115,9 @@ exports.login = async (req, res) => {
 exports.changePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
-    const userId = req.userId;
+    const ownerId = req.ownerId;
 
-    const user = await User.findById(userId);
+    const user = await User.findById(ownerId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }

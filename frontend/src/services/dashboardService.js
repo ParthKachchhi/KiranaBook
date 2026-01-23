@@ -2,7 +2,8 @@ import axios from "axios";
 import { getAuth } from "../utils/authStorage";
 
 const API = axios.create({
-    baseURL: "https://kiranabook.onrender.com/api",
+    // baseURL: "https://kiranabook.onrender.com/api",
+    baseURL: "http://localhost:5000/api",
 });
 
 API.interceptors.request.use((req) => {
@@ -14,6 +15,6 @@ API.interceptors.request.use((req) => {
 });
 
 export const getDashboard = async () => {
-  const res = await API.get("/dashboard/summary");
-  return res.data;
+    const res = await API.get("/dashboard/summary");
+    return res.data;
 };

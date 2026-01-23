@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Box, Grid, Typography, Button, Stack, Link, Container, IconButton } from "@mui/material";
+import { Box, Grid, Typography, Button, Stack, Link, Container, IconButton, keyframes } from "@mui/material";
 import { motion, useMotionValue, useTransform, useInView, AnimatePresence } from "framer-motion";
 // import gsap from "gsap";
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -8,6 +8,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 // import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useNavigate } from "react-router-dom";
 import { gsap, ScrollTrigger } from "gsap/all";
+import { Menu, X, ChevronRight } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -229,6 +230,407 @@ function PreLoader({ onComplete }) {
     );
 }
 
+/* =========================================================
+   HEADER
+========================================================= */
+
+function Header() {
+    const [isScrolled, setIsScrolled] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const handleScroll = () => setIsScrolled(window.scrollY > 20);
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    const navLinks = [
+        { label: "Features", href: "#features" },
+        { label: "Why Us", href: "#why-platform" },
+        { label: "Pricing", href: "#pricing" },
+        { label: "Testimonials", href: "#testimonials" },
+    ];
+
+    const gradientAnimation = keyframes`
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+`;
+
+    return (
+        <Box
+            sx={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                right: 0,
+                zIndex: 50,
+                transition: "0.5s",
+                backdropFilter: isScrolled ? "blur(16px)" : "none",
+                background: isScrolled
+                    ? "rgba(11,15,26,0.8)"
+                    : "transparent",
+                borderBottom: isScrolled
+                    ? "1px solid rgba(255,255,255,0.1)"
+                    : "none",
+                boxShadow: isScrolled
+                    ? "0 10px 40px rgba(0,229,255,0.05)"
+                    : "none",
+            }}
+        >
+            <Box
+                sx={{
+                    maxWidth: 1280,
+                    mx: "auto",
+                    px: 3,
+                    height: 80,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                }}
+            >
+                {/* LOGO */}
+                <Stack direction="row" spacing={2} alignItems="center">
+                    <Box display="flex" alignItems="center" gap={2}>
+                        {/* LOGO ICON */}
+                        <Box position="relative">
+                            {/* Glow */}
+                            <Box
+                                sx={{
+                                    position: "absolute",
+                                    inset: 0,
+                                    background:
+                                        "linear-gradient(135deg,#00E5FF,#7C4DFF)",
+                                    borderRadius: "12px",
+                                    filter: "blur(12px)",
+                                    opacity: 0.5,
+                                }}
+                            />
+
+                            {/* Icon Box */}
+                            <Box
+                                sx={{
+                                    position: "relative",
+                                    p: 1.5,
+                                    borderRadius: "12px",
+                                    background:
+                                        "linear-gradient(135deg,#00E5FF,#7C4DFF)",
+                                }}
+                            >
+                                <svg
+                                    width="28"
+                                    height="28"
+                                    viewBox="0 0 28 28"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M4 4H18C19.1046 4 20 4.89543 20 6V22C20 23.1046 19.1046 24 18 24H4V4Z"
+                                        fill="white"
+                                        fillOpacity="0.9"
+                                    />
+                                    <path
+                                        d="M20 8H24V20H20"
+                                        stroke="white"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                    />
+                                    <line
+                                        x1="8"
+                                        y1="10"
+                                        x2="16"
+                                        y2="10"
+                                        stroke="#0B0F1A"
+                                        strokeWidth="1.5"
+                                        strokeLinecap="round"
+                                    />
+                                    <line
+                                        x1="8"
+                                        y1="14"
+                                        x2="16"
+                                        y2="14"
+                                        stroke="#0B0F1A"
+                                        strokeWidth="1.5"
+                                        strokeLinecap="round"
+                                    />
+                                    <line
+                                        x1="8"
+                                        y1="18"
+                                        x2="13"
+                                        y2="18"
+                                        stroke="#0B0F1A"
+                                        strokeWidth="1.5"
+                                        strokeLinecap="round"
+                                    />
+                                </svg>
+                            </Box>
+                        </Box>
+
+                        {/* LOGO TEXT */}
+                        <Box display="flex" flexDirection="column">
+                            <Typography
+                                sx={{
+                                    fontSize: "1.5rem",
+                                    fontWeight: 700,
+                                    background:
+                                        "linear-gradient(90deg,#00E5FF,#7C4DFF,#00E5FF)",
+                                    backgroundSize: "200% 100%",
+                                    WebkitBackgroundClip: "text",
+                                    WebkitTextFillColor: "transparent",
+                                    animation: `${gradientAnimation} 3s ease infinite`,
+                                }}
+                            >
+                                KiranaBook
+                            </Typography>
+
+                            <Typography
+                                sx={{
+                                    fontSize: "10px",
+                                    color: "#9CA3AF",
+                                    letterSpacing: "0.15em",
+                                    textTransform: "uppercase",
+                                    marginTop: "-4px",
+                                }}
+                            >
+                                Smart Accounting
+                            </Typography>
+                        </Box>
+
+                    </Box>
+                </Stack>
+
+                {/* DESKTOP NAV */}
+                <Stack
+                    direction="row"
+                    spacing={4}
+                    sx={{ display: { xs: "none", lg: "flex" } }}
+                >
+                    {navLinks.map((link) => (
+                        <Box
+                            key={link.label}
+                            component="a"
+                            href={link.href}
+                            sx={{
+                                position: "relative",
+                                fontSize: "14px",
+                                fontWeight: 500,
+                                color: "#D1D5DB",
+                                textDecoration: "none",
+                                transition: "color 0.3s ease",
+
+                                "&:hover": {
+                                    color: "#00E5FF",
+                                },
+
+                                /* underline */
+                                "&::after": {
+                                    content: '""',
+                                    position: "absolute",
+                                    left: 0,
+                                    bottom: "-4px",
+                                    width: "0%",
+                                    height: "2px",
+                                    background:
+                                        "linear-gradient(90deg, #00E5FF, #7C4DFF)",
+                                    transition: "width 0.3s ease",
+                                },
+
+                                "&:hover::after": {
+                                    width: "100%",
+                                },
+                            }}
+                        >
+                            {link.label}
+                        </Box>
+                    ))}
+                </Stack>
+
+                {/* CTA */}
+                <Box
+                    sx={{
+                        display: { xs: "none", lg: "flex" },
+                        alignItems: "center",
+                        gap: 2,
+                    }}
+                >
+                    {/* LOGIN */}
+                    <Box
+                        component="a"
+                        sx={{
+                            px: 2.5,
+                            py: 1.25,
+                            fontSize: "14px",
+                            fontWeight: 500,
+                            color: "#D1D5DB",
+                            textDecoration: "none",
+                            transition: "color 0.3s ease",
+
+                            "&:hover": {
+                                color: "#fff",
+                            },
+                        }}
+                        onClick={() => navigate("/auth")}
+                    >
+                        Login
+                    </Box>
+
+                    {/* GET STARTED BUTTON */}
+                    <Box
+                        component="a"
+                        onClick={() => navigate("/auth?mode=signup")}
+                        sx={{
+                            position: "relative",
+                            px: 3,
+                            py: 1.25,
+                            fontSize: "14px",
+                            fontWeight: 600,
+                            color: "#fff",
+                            borderRadius: "12px",
+                            overflow: "hidden",
+                            textDecoration: "none",
+                            transition: "transform 0.3s ease",
+                            "&:hover": {
+                                transform: "scale(1.05)",
+                            },
+                        }}
+                    >
+                        {/* Background */}
+                        <Box
+                            sx={{
+                                position: "absolute",
+                                inset: 0,
+                                background:
+                                    "linear-gradient(90deg, #00E5FF, #7C4DFF)",
+                                transition: "opacity 0.3s ease",
+                            }}
+                        />
+
+                        {/* Hover Background */}
+                        <Box
+                            sx={{
+                                position: "absolute",
+                                inset: 0,
+                                background:
+                                    "linear-gradient(90deg, #7C4DFF, #00E5FF)",
+                                opacity: 0,
+                                transition: "opacity 0.3s ease",
+                                ".MuiBox-root:hover &": {
+                                    opacity: 1,
+                                },
+                            }}
+                        />
+
+                        {/* Glow */}
+                        <Box
+                            sx={{
+                                position: "absolute",
+                                inset: 0,
+                                filter: "blur(18px)",
+                                background:
+                                    "linear-gradient(90deg, #00E5FF, #7C4DFF)",
+                                opacity: 0.5,
+                                transition: "opacity 0.3s ease",
+                                ".MuiBox-root:hover &": {
+                                    opacity: 0.75,
+                                },
+                            }}
+                        />
+
+                        {/* Content */}
+                        <Stack
+                            direction="row"
+                            spacing={1}
+                            alignItems="center"
+                            sx={{
+                                position: "relative",
+                                zIndex: 2,
+                            }}
+                        >
+                            <Typography fontSize={14} fontWeight={600}>
+                                Get Started Free
+                            </Typography>
+
+                            <ChevronRight
+                                size={16}
+                                style={{
+                                    transition: "transform 0.3s ease",
+                                }}
+                                className="arrow"
+                            />
+                        </Stack>
+                    </Box>
+                </Box>
+
+                {/* MOBILE BUTTON */}
+                <IconButton
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    sx={{ display: { lg: "none" }, color: "#fff" }}
+                >
+                    {isMobileMenuOpen ? <X /> : <Menu />}
+                </IconButton>
+            </Box>
+
+            {/* MOBILE MENU */}
+            {isMobileMenuOpen && (
+                <Box
+                    sx={{
+                        position: "absolute",
+                        top: "100%",
+                        left: 0,
+                        right: 0,
+                        mx: 2,
+                        mt: 1,
+                        p: 2,
+                        borderRadius: 3,
+                        background: "rgba(11,15,26,.95)",
+                        backdropFilter: "blur(20px)",
+                        border: "1px solid rgba(255,255,255,0.1)",
+                    }}
+                >
+                    <Stack spacing={1.5}>
+                        {navLinks.map((link) => (
+                            <Button
+                                key={link.label}
+                                href={link.href}
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                sx={{
+                                    justifyContent: "flex-start",
+                                    color: "#ccc",
+                                    "&:hover": {
+                                        color: "#00E5FF",
+                                    },
+                                }}
+                            >
+                                {link.label}
+                            </Button>
+                        ))}
+
+                        <Box height={1} bgcolor="rgba(255,255,255,.1)" />
+
+                        <Button sx={{ color: "#ccc" }}>Login</Button>
+
+                        <Button
+                            sx={{
+                                color: "#fff",
+                                background:
+                                    "linear-gradient(90deg,#00E5FF,#7C4DFF)",
+                            }}
+                        >
+                            Get Started Free
+                        </Button>
+                    </Stack>
+                </Box>
+            )}
+        </Box>
+    );
+}
 
 /* ================================
    HERO SECTION (MUI VERSION)
@@ -284,7 +686,9 @@ function Hero() {
                     'radial-gradient(circle at top, #121826, #0B0F1A 60%)',
                 display: 'flex',
                 alignItems: 'center',
+                pt: { xs: "90px", md: "110px" }
             }}
+
         >
             {/* ================= CURSOR ENERGY FIELD ================= */}
             <motion.div
@@ -2180,17 +2584,20 @@ export default function LandingPage() {
             {loading && <PreLoader onComplete={() => setLoading(false)} />}
 
             {!loading && (
-                <div className="relative min-h-screen bg-[#0B0F1A] text-white overflow-x-hidden">
-                    <Hero />
-                    <TrustBar />
-                    <FeatureSections />
-                    <WhyPlatform />
-                    <LiveMetrics />
-                    {/* <TestimonialsAndCTA /> */}
-                    <Testimonials />
-                    <FinalCTA />
-                    <Footer />
-                </div>
+                <>
+                    <Header />
+                    <div className="relative min-h-screen bg-[#0B0F1A] text-white overflow-x-hidden">
+                        <Hero />
+                        <TrustBar />
+                        <FeatureSections />
+                        <WhyPlatform />
+                        <LiveMetrics />
+                        {/* <TestimonialsAndCTA /> */}
+                        <Testimonials />
+                        <FinalCTA />
+                        <Footer />
+                    </div>
+                </>
             )}
         </>
     );

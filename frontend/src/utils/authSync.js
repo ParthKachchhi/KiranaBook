@@ -6,7 +6,8 @@ export async function syncProfile() {
   if (!auth?.token) return;
 
   try {
-    const res = await axios.get("https://kiranabook.onrender.com/api/profile", {
+    // const res = await axios.get("https://kiranabook.onrender.com/api/profile", {
+    const res = await axios.get("http://localhost:5000/api/profile", {
       headers: {
         Authorization: `Bearer ${auth.token}`,
       },

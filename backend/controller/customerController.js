@@ -11,7 +11,7 @@ exports.createCustomer = async (req, res) => {
       balance > 0 ? "receivable" : balance < 0 ? "payable" : "settled";
 
     const customer = await Customer.create({
-      ownerId: req.userId,
+      ownerId: req.ownerId,
       name,
       mobile,
       gstin,
@@ -31,7 +31,7 @@ exports.createCustomer = async (req, res) => {
 // ==========================
 exports.getCustomers = async (req, res) => {
   try {
-    const customers = await Customer.find({ ownerId: req.userId }).sort({
+    const customers = await Customer.find({ ownerId: req.ownerId }).sort({
       createdAt: -1,
     });
 
@@ -52,7 +52,7 @@ exports.updateCustomer = async (req, res) => {
       balance > 0 ? "receivable" : balance < 0 ? "payable" : "settled";
 
     const customer = await Customer.findOneAndUpdate(
-      { _id: req.params.id, ownerId: req.userId },
+      { _id: req.params.id, ownerId: req.ownerId },
       { name, mobile, gstin, balance, type },
       { new: true }
     );
@@ -70,7 +70,7 @@ exports.deleteCustomer = async (req, res) => {
   try {
     await Customer.findOneAndDelete({
       _id: req.params.id,
-      ownerId: req.userId,
+      ownerId: req.ownerId,
     });
 
     res.json({ message: "Customer deleted" });

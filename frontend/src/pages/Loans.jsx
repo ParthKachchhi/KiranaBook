@@ -23,12 +23,18 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import { useEffect, useState } from "react";
-import { fetchLoans } from "../services/loanService";
+import { fatchLoans } from "../services/loanService";
+import CreateLoanModal from "../components/CreateLoanModal";
+import CollectPaymentModal from "../components/CollectPaymentModal";
 
 export default function Loans() {
   const [status, setStatus] = useState("all");
   const [loans, setLoans] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedLoan, setSelectedLoan] = useState(null);
+  const [openPayment, setOpenPayment] = useState(false);
+
 
   // ==========================
   // LOAD LOANS FROM BACKEND
@@ -40,10 +46,11 @@ export default function Loans() {
   const loadLoans = async () => {
     try {
       setLoading(true);
-      const data = await fetchLoans({ status });
-      setLoans(data);
+      const data = await fatchLoans({ status });
+      setLoans(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("LOAD LOANS ERROR", err);
+      setLoans([]);
     } finally {
       setLoading(false);
     }
@@ -84,6 +91,7 @@ export default function Loans() {
           variant="contained"
           startIcon={<AddIcon />}
           size="large"
+          onClick={() => setOpenModal(true)}
         >
           Add Loan
         </Button>
@@ -160,7 +168,7 @@ export default function Loans() {
               </TableHead>
 
               <TableBody>
-                {loans.length === 0 ? (
+                {Array.isArray(loans) && loans.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={7} align="center">
                       No loans found
@@ -182,11 +190,11 @@ export default function Loans() {
                       </TableCell>
 
                       <TableCell>
-                        ₹{loan.principalAmount.toLocaleString()}
+                        ₹{loan.principal.toLocaleString()}
                       </TableCell>
 
                       <TableCell>
-                        ₹{loan.outstandingAmount.toLocaleString()}
+                        ₹{loan.outstanding.toLocaleString()}
                       </TableCell>
 
                       <TableCell>{loan.interestRate}%</TableCell>
@@ -204,10 +212,14 @@ export default function Loans() {
                       </TableCell>
 
                       <TableCell align="right">
-                        {loan.status !== "CLOSED" && (
+                        {loan.status !== "closed" && (
                           <Button
                             size="small"
                             startIcon={<PaymentsIcon />}
+                            onClick={() => {
+                              setSelectedLoan(loan);
+                              setOpenPayment(true);
+                            }}
                           >
                             Collect
                           </Button>
@@ -221,6 +233,20 @@ export default function Loans() {
           </TableContainer>
         )}
       </Paper>
+      <CreateLoanModal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        onSuccess={loadLoans}
+      />
+      <CollectPaymentModal
+        open={openPayment}
+        loan={selectedLoan}
+        onClose={() => {
+          setOpenPayment(false);
+          setSelectedLoan(null);
+        }}
+        onSuccess={loadLoans}
+      />
     </>
   );
 }

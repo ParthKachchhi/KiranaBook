@@ -1,40 +1,80 @@
+const mongoose = require("mongoose");
 const Loan = require("../models/Loan");
 const Customer = require("../models/Customer");
+const calculateInterest = require("../utils/calcInterest");
+const { calculateInterest } = require("../utils/calculateInterest");
+
+async function applyInterest(loan) {
+  const today = new Date();
+
+  const { interest } = calculateInterest({
+    principal: loan.outstanding,
+    interestRate: loan.interestRate,
+    startDate: loan.lastInterestCalcDate,
+    endDate: today,
+    interestType: loan.interestType,
+  });
+
+  if (interest > 0) {
+    loan.outstanding += interest;
+    loan.totalInterest += interest;
+    loan.lastInterestCalcDate = today;
+    await loan.save();
+  }
+}
 
 /* =========================
    CREATE LOAN
 ========================= */
+
+
 exports.createLoan = async (req, res) => {
   try {
     const {
       customerId,
       principal,
       interestRate,
-      interestType,
+      interestType = "flat",
       startDate,
       dueDate,
     } = req.body;
 
-    if (!customerId || !principal || !interestRate || !startDate || !dueDate) {
-      return res.status(400).json({ message: "Missing required fields" });
+    if (!mongoose.Types.ObjectId.isValid(customerId)) {
+      return res.status(400).json({ message: "Invalid customer ID" });
     }
 
-    // Ensure customer exists
-    const customer = await Customer.findById(customerId);
+    if (!principal || !interestRate || !startDate || !dueDate) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+    console.log("OWNER ID:", req.ownerId);
+    console.log("CUSTOMER ID:", customerId);
+
+    // ✅ CUSTOMER MUST BELONG TO OWNER
+    const customer = await Customer.findOne({
+      _id: customerId,
+      ownerId: req.ownerId,
+    });
+
     if (!customer) {
       return res.status(404).json({ message: "Customer not found" });
     }
 
     const loan = await Loan.create({
-      userId: req.userId,
-      customerId,
+      ownerId: req.ownerId, // ✅ CHANGED
+      customerId: customer._id,
       principal,
       interestRate,
       interestType,
       startDate,
       dueDate,
       outstanding: principal,
+      status: "active",
     });
+
+    // update customer balance
+    // customer.balance += principal;
+    // customer.type = "receivable";
+    // await customer.save();
 
     res.status(201).json(loan);
   } catch (err) {
@@ -43,14 +83,20 @@ exports.createLoan = async (req, res) => {
   }
 };
 
+
 /* =========================
    GET ALL LOANS (WITH CUSTOMER)
 ========================= */
 exports.getLoans = async (req, res) => {
   try {
-    const loans = await Loan.find({ userId: req.userId })
+    const loans = await Loan.find({ ownerId: req.ownerId })
       .populate("customerId", "name mobile")
       .sort({ createdAt: -1 });
+
+    for (const loan of loans) {
+      calculateInterest(loan);
+      await loan.save();
+    }
 
     res.json(loans);
   } catch (err) {
@@ -67,7 +113,7 @@ exports.getLoansByCustomer = async (req, res) => {
     const { customerId } = req.params;
 
     const loans = await Loan.find({
-      userId: req.userId,
+      ownerId: req.ownerId,
       customerId,
     }).sort({ createdAt: -1 });
 
@@ -87,7 +133,7 @@ exports.updateLoanStatus = async (req, res) => {
     const { status } = req.body;
 
     const loan = await Loan.findOneAndUpdate(
-      { _id: id, userId: req.userId },
+      { _id: id, ownerId: req.ownerId },
       { status },
       { new: true }
     );

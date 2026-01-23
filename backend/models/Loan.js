@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const loanSchema = new mongoose.Schema(
   {
-    userId: {
+    ownerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -20,14 +20,14 @@ const loanSchema = new mongoose.Schema(
     },
 
     interestRate: {
-      type: Number,
+      type: Number, // eg: 12 = 12%
       required: true,
     },
 
-    interestType: {
+    interestPeriod: {
       type: String,
-      enum: ["flat", "reducing"],
-      default: "flat",
+      enum: ["daily", "monthly", "yearly"],
+      default: "monthly",
     },
 
     startDate: {
@@ -45,11 +45,29 @@ const loanSchema = new mongoose.Schema(
       required: true,
     },
 
+    lastInterestCalculatedAt: {
+      type: Date,
+      default: function () {
+        return this.startDate;
+      },
+    },
+
     status: {
       type: String,
       enum: ["active", "overdue", "closed"],
       default: "active",
     },
+
+    lastInterestCalcDate: {
+      type: Date,
+      default: Date.now,
+    },
+
+    totalInterest: {
+      type: Number,
+      default: 0,
+    },
+
   },
   { timestamps: true }
 );
