@@ -10,6 +10,11 @@
 </p>
 
 <h1 align="center">🛒 KiranaBook</h1>
+<p align="center">
+  <a href="LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-yellow.svg" />
+  </a>
+</p>
 
 <p align="center">
 <b>Full Stack Business Management Web Application</b><br/>
